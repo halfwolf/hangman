@@ -61,6 +61,7 @@ class ComputerPlayer
     @secret_word = ''
     @guessed_letters = []
     @alphabet = ('a'..'z').to_a.shuffle
+    @short_dictionary = nil
   end
   
   # computer as ref
@@ -79,10 +80,15 @@ class ComputerPlayer
   # computer as player
   def receive_secret_length(encoded_word)
     @secret_word = encoded_word
+    if @short_dictionary.nil?
+      length = @secret_word.length
+      @short_dictionary = @dictionary.select {|word| word.length == length }
+    end
   end
   
   def guess
-    @alphabet.pop
+    revise_words
+    choose_best_letter
   end
   
   private
@@ -98,6 +104,44 @@ class ComputerPlayer
   def secret_word
     @secret_word
   end
+  
+  def revise_words
+    updated_dictionary = @short_dictionary.select do |word|
+      word_passes?(word)
+    end
+    
+    @short_dictionary = updated_dictionary
+  end
+  
+  def word_passes?(word)
+    word.split("").each_index do |idx|
+      if @secret_word[idx].nil?
+        next if @guessed_letters.nil?
+        return false if @guessed_letters.include?(word[idx])
+      else
+        return false if word[idx] != @secret_word[idx]
+      end
+    end
+    
+    true
+  end
+  
+  def choose_best_letter
+    best_letter = ''
+    best_count = 0
+    compounded_dictionary = @short_dictionary.join("")
+    ('a'..'z').each do |letter|
+      letter_count = compounded_dictionary.scan(letter).count
+      puts "#{letter_count} = #{letter}"
+      if letter_count > best_count && !@guessed_letters.include?(letter)
+        best_letter = letter 
+        best_count = letter_count
+      end
+    end
+    @guessed_letters << best_letter
+    
+    best_letter
+  end  
   
 end
 
