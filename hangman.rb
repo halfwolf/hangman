@@ -1,3 +1,4 @@
+<<<<<<< Local Changes
 class Hangman
   
   def initialize(guessing_player, checking_player)
@@ -192,4 +193,5 @@ class HumanPlayer
     
   
   
-end
+end=======
+>>>>>>> External Changes
