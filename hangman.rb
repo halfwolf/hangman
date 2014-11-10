@@ -1,4 +1,3 @@
-<<<<<<< Local Changes
 class Hangman
   
   def initialize(guessing_player, checking_player)
@@ -116,8 +115,9 @@ class ComputerPlayer
   
   def word_passes?(word)
     word.split("").each_index do |idx|
+      next if @guessed_letters.nil?
+      
       if @secret_word[idx].nil?
-        next if @guessed_letters.nil?
         return false if @guessed_letters.include?(word[idx])
       else
         return false if word[idx] != @secret_word[idx]
@@ -147,6 +147,7 @@ class ComputerPlayer
 end
 
 class HumanPlayer
+  
   def initialize
     @secret_word = []
   end
@@ -166,13 +167,15 @@ class HumanPlayer
         guess = false
       end
     end
-    return guess
+    
+    guess
   end
   
   def pick_secret_word
     puts "enter secret word length"
     length = gets.chomp
     length.to_i.times { @secret_word << nil }
+    
     @secret_word
   end
   
@@ -187,11 +190,8 @@ class HumanPlayer
         letter.empty? ? @secret_word[idx] = nil : @secret_word[idx] = letter
       end
     end
+    
     @secret_word
   end
-  
-    
-  
-  
-end=======
->>>>>>> External Changes
+
+end
